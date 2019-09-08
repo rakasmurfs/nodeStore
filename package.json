@@ -1,0 +1,25 @@
+{
+  "name": "nodeStore",
+  "version": "1.0.0",
+  "description": "Node app that uses a simple database to keep track of a fictional stores inventory.",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rakasmurfs/nodeStore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rakasmurfs/nodeStore/issues"
+  },
+  "homepage": "https://github.com/rakasmurfs/nodeStore#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.0.0",
+    "mysql": "^2.17.1"
+  }
+}
