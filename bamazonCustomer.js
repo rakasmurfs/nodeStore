@@ -10,10 +10,9 @@ var connection=mysql.createConnection(
     database:"bamazon"
 });
 
-
-function readProducts()
+function displayTable()
 {
-    connection.query("SELECT * FROM products", function(error,res)
+    connection.query("SELECT item_id, product_name, price FROM products", function(error,res)
     {
         if(error)
         {
@@ -21,57 +20,69 @@ function readProducts()
         }
         else
         {
-            const placeholderArray=[res];
-            var productArray = [];
-            //console.log(res);
-            for(var i=0; i < res.length; i++)
-            {            
-                //placeholderArray.push(res[i]);
-                productArray.push(res[i]);
-                delete productArray[i].department_name;
-                delete productArray[i].stock_quantity;
-                delete productArray[i].product_sales;
-            }
-            console.log(placeholderArray[0]);
-            cTable.getTable([productArray]);
-            console.table(productArray);
-            inquiry(placeholderArray);
+            cTable.getTable([res]);
+            console.table(res);
         }
     })
 }
 
-function inquiry(product)
+function purchaseProducts()
 {
-  inquirer
-  .prompt([
+    connection.query("SELECT * FROM products", function(error,product)
     {
-      type: "input",
-      message: "Please enter the ID of the item you would like to buy.",
-      name: "idSelected"
-    },
-    {
-        type: "input",
-        message: "How many would you like to purchase?",
-        name: "quantity"
-    }   
-  ])
-  .then(answers => 
-    {
-        var parsedID = parseInt(answers.idSelected);
-        var parsedQuantity = parseInt(answers.quantity);
-        let i = parsedID - 1;
-        console.log(i);
-        console.log(product[i]);
-        if(answers.quantity <= product[i].stock_quantity)
+        if(error)
         {
-            var totalPrice = parsedQuantity * product[i].price;
-            product[i].product_sales += totalPrice;  
-            console.log(product[i].product_sales);          
+            console.log(error);
         }
-        else console.log("Sorry we don't have enough stock for that purchase.");
-    });
+        else
+        {
+            inquirer
+            .prompt([
+                {
+                type: "input",
+                message: "Please enter the ID of the item you would like to buy.",
+                name: "idSelected"
+                },
+                {
+                    type: "input",
+                    message: "How many would you like to purchase?",
+                    name: "quantity"
+                }   
+            ])
+            .then(answers => 
+                {
+                    var parsedID = parseInt(answers.idSelected);
+                    var parsedQuantity = parseInt(answers.quantity);
+                    let i = parsedID - 1;
+                    if(answers.quantity <= product[i].stock_quantity)
+                    {
+                        var currentOrder = parsedQuantity * product[i].price;
+                        product[i].product_sales += currentOrder;
+                        product[i].stock_quantity -= parsedQuantity;  
+                        console.log(product[i].product_sales);
+                        //console.log(product[i]);          
+                        updateDatabase(parsedID, product[i].stock_quantity, product[i].product_sales, currentOrder);
+                    }
+                    else console.log("Sorry we don't have enough stock for that purchase.");
+                });            
+        }
+    })
+}
 
-};
+function updateDatabase(itemID, quantity, productSales, currentOrder)
+{
+    connection.query("UPDATE products SET stock_quantity = (?), product_sales = (?) WHERE item_id = (?)", [quantity, productSales, itemID], function(error,res)
+    {
+        if(error)
+        {
+            console.log(error);
+        }
+        else
+        {
+            console.log("You spent: " + currentOrder + "\nDatabase updated.");
+        }
+    })
+}
 
 
 
@@ -85,7 +96,7 @@ connection.connect(function(error){
     else
     {
         console.log("You have successfully connected");
-        //insertSongs('sweatpants', 'childish gambino', 'rap');
-        readProducts();
+        displayTable();
+        purchaseProducts();
     }
 })
