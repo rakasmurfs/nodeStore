@@ -45,7 +45,7 @@ function restock()
 
 function viewLowStock()
 {
-    connection.query("SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity < 5", function(error,res)
+    connection.query("SELECT item_id AS 'ID', product_name AS 'Product', department_name AS 'Department', price AS 'Price', stock_quantity AS 'Current Stock' FROM products WHERE stock_quantity < 5", function(error,res)
     {
         if(error)
         {
@@ -62,7 +62,7 @@ function viewLowStock()
 
 function viewProducts()
 {
-    connection.query("SELECT item_id, product_name, price, stock_quantity FROM products", function(error,res)
+    connection.query("SELECT item_id AS 'ID', product_name AS 'Product', department_name AS 'Deparment', price AS 'Price', stock_quantity AS 'Current Stock' FROM products", function(error,res)
     {
         if(error)
         {

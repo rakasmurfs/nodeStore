@@ -12,7 +12,7 @@ const connection=mysql.createConnection(
 
 function displayTable()
 {
-    connection.query("SELECT item_id, product_name, price FROM products", function(error,res)
+    connection.query("SELECT item_id AS 'ID', product_name AS 'Product', price AS 'price' FROM products", function(error,res)
     {
         if(error)
         {
