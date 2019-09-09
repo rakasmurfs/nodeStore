@@ -26,73 +26,7 @@ function departmentSales()
         }
     })
 }
-//really dumb way to make it work... hardcoded
-function departmentSalesCheat()
-{
-    var cheatersFixOverheadE = 0;
-    var cheatersFixOverheadA = 0;
-    var cheatersFixSalesE = 0;
-    var cheatersFixSalesA = 0;
-    connection.query("SELECT department_id AS ID, departments.department_name AS Department, over_head_costs AS Overhead FROM departments", function(error,res)
-    {
-        if(error)
-        {
-            console.log(error);
-        }
-        else
-        {
-            cheatersFixOverheadE = res[0].Overhead;
-            cheatersFixOverheadA = res[1].Overhead;
-            //cTable.getTable([res]);
-            //console.table(res);
-        }
-    })
 
-    connection.query("SELECT SUM(product_sales) AS 'sales' FROM products WHERE department_name='Electronics'", function(error,res)
-    {
-        if(error)
-        {
-            console.log(error);
-        }
-        else
-        {
-            cheatersFixSalesE = res[0].sales;
-        }
-    })
-
-    connection.query("SELECT SUM(product_sales) AS 'sales' FROM products WHERE department_name='Appliances'", function(error,res)
-    {
-        if(error)
-        {
-            console.log(error);
-        }
-        else
-        {
-            cheatersFixSalesA = res[0].sales;
-            cheatersFixObject=
-            [{
-                ID:1,
-                Department:"Electronics",
-                Overhead:25000,
-                Sales:cheatersFixSalesE,
-                Profit:cheatersFixSalesE - cheatersFixOverheadE
-            },
-            {
-                ID:2,
-                Department:"Appliances",
-                Overhead: 6000,
-                Sales: cheatersFixSalesA,
-                Profit: cheatersFixSalesA - cheatersFixOverheadA
-            },
-            ]
-
-            cTable.getTable([cheatersFixObject]);
-            console.table(cheatersFixObject);
-        }
-    })
-
-
-}
 
 function newDepartment()
 {
@@ -142,7 +76,7 @@ function inquiry()
     .then(function(inquirerResponse) {
         if(inquirerResponse.action === "View Product Sales by Department")
         {
-            departmentSalesCheat();
+            departmentSales();
         };
         if(inquirerResponse.action === "Add new department")
         {
