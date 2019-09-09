@@ -1,7 +1,7 @@
 const cTable = require('console.table');
-var inquirer = require('inquirer');
-var mysql=require("mysql");
-var connection=mysql.createConnection(
+const inquirer = require('inquirer');
+const mysql=require("mysql");
+const connection=mysql.createConnection(
 {
     host:"localhost",
     port:"8889",
